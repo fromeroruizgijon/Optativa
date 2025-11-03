@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <strong>Nombre: </strong>
+    <span th:text="${session.lista.get(session.id2).nombre}"></span>
+    <br>
+    <strong>Asunto: </strong>
+    <span th:text="${session.lista.get(session.id2).asunto}"></span>
+    <br>
+    <strong>descripción: </strong>
+    <span th:text="${session.lista.get(session.id2).descripcion}"></span>
+    <br>
+    <br>
+    <a href="/inicio">Volver atrás</a>
+
+</body>
+</html>
