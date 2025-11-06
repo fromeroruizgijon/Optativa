@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 
 
-
 @Controller
 public class AnunciosController {
-    @SuppressWarnings("unchecked")
     @GetMapping("/inicio")
     public String mostrarPagina() {
         return "inicio";
