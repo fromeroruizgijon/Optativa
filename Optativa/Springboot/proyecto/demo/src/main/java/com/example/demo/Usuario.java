@@ -2,11 +2,13 @@ package com.example.demo;
 
 public class Usuario {
     private String nombre;
+    private String password;
     private String email;
     private Roles rol;
 
-    public Usuario(String nombre, String email, Roles rol) {
+    public Usuario(String nombre, String password, String email, Roles rol) {
         this.nombre = nombre;
+        this.password = password;
         this.email = email;
         this.rol = rol;
     }
@@ -17,6 +19,12 @@ public class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+    public String getPassword(){
+        return password;
+    }
+    public void setPassword(String pasword){
+        this.password = pasword;
     }
 
     public String getEmail() {

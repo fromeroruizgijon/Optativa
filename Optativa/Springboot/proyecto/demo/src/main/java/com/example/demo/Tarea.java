@@ -1,15 +1,15 @@
 package com.example.demo;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
-public class Tarea {
+public class Tarea implements Comparable<Tarea> {
     private String titulo;
     private String description;
     private boolean estado;
     private int prioridad;
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
 
-    public Tarea(String titulo, String description, boolean estado, int prioridad, Date fechaCreacion) {
+    public Tarea(String titulo, String description, boolean estado, int prioridad, LocalDate fechaCreacion) {
         this.titulo = titulo;
         this.description = description;
         this.estado = estado;
@@ -49,11 +49,11 @@ public class Tarea {
         this.prioridad = prioridad;
     }
 
-    public Date getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
@@ -69,6 +69,13 @@ public class Tarea {
     public String toString() {
         return "Tarea: titulo: " + titulo + ", description: " + description + ", estado: " + estado + ", prioridad: "
                 + prioridad + ", fechaCreacion: " + fechaCreacion;
+    }
+
+    @Override
+    public int compareTo(Tarea o) {
+       if (this.prioridad < o.prioridad) return -1;
+        if (this.prioridad > o.prioridad) return 1;
+        return 0;
     }
 
 }

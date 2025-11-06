@@ -1,7 +1,6 @@
-/* ----- Estilos generales ----- */
 * {
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 body {
@@ -10,72 +9,60 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(120deg, #1d2671, #c33764);
-  background-size: cover;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
 }
 
-/* ----- Contenedor principal ----- */
 form {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 2.5rem;
+  background: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  padding: 2.5rem;
   width: 340px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  color: #fff;
+  gap: 1.2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* ----- Título ----- */
 h1 {
   text-align: center;
-  margin-bottom: 0.5rem;
-  font-size: 1.8rem;
-  letter-spacing: 1px;
-  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.6rem;
+  color: #1e293b;
 }
 
-/* ----- Inputs y labels ----- */
 label {
   font-weight: 500;
-  font-size: 0.9rem;
+  color: #334155;
+  font-size: 0.95rem;
 }
 
 input[type="text"],
 input[type="password"] {
-  padding: 0.8rem;
-  border: none;
-  border-radius: 0.6rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
   outline: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 1rem;
-  transition: background 0.3s ease, transform 0.1s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-  background: rgba(255, 255, 255, 0.35);
-  transform: scale(1.02);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
-/* ----- Botón ----- */
 input[type="submit"] {
-  background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+  background: #2563eb;
+  color: #fff;
   border: none;
-  border-radius: 0.6rem;
-  padding: 0.9rem;
-  color: white;
+  border-radius: 0.5rem;
+  padding: 0.8rem;
   font-weight: 600;
-  font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.3s ease;
+  transition: background 0.3s ease, transform 0.1s ease;
 }
 
 input[type="submit"]:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
+  background: #1d4ed8;
+  transform: translateY(-2px);
 }

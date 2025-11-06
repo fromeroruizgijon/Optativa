@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Proyecto {
     private String nombre;
@@ -70,7 +71,7 @@ public class Proyecto {
 
     public ArrayList<Tarea> ordenarPorPrioridad(Proyecto proyecto) {
 
-        // ni zorra de como ordenar pa más adelante
+            Collections.sort(proyecto.tareas);
 
         return proyecto.tareas;
     }
