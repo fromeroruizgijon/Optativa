@@ -1,11 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-    <h1>Entraste</h1>
+    <nav class="nav">
+        <ul>
+            <li>sesion: <span th:text="${session.usuario.nombre}"></span></li>
+            <li><a href="/cerrarSesion">Cerrar sesión</a></li>
+            <li><a href="/index">Inicio</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Mis Proyectos: </h1>
+        <ul>
+            <li th:each="proyecto : ${session.proyectos}">
+                Nombre:
+                <span th:text="${proyecto.nombre}" ></span>
+                Descripción:
+                <span th:text="${proyecto.descripcion}"></span>
+            </li>
+            <li>
+                <a href="crearProyecto">Crear nuevo proyecto</a>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>

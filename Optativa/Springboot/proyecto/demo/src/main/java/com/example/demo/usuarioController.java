@@ -3,11 +3,15 @@ package com.example.demo;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 
@@ -29,15 +33,21 @@ public class usuarioController {
     
 
     @RequestMapping("/procesarLogin")
-    public String procesarLogin(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "password") String password, HttpServletRequest request) {
+    public String procesarLogin(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "password") String password, HttpServletRequest request, HttpSession session) {
        boolean entrar = false;
        ArrayList<Usuario> listaUsuarios = rescatarUsuarios(request);
+        Usuario usuarioLogeado = null;
+
         for (Usuario usuario : listaUsuarios) {
             if(nombre.equals(usuario.getNombre()) && password.equals(usuario.getPassword())){
                 entrar = true;
+                if(entrar){
+                    usuarioLogeado = usuario;
+                }
             }
         }
         if(entrar){
+            session.setAttribute("usuario", usuarioLogeado);
                 return "index";
             }else{
                 return "registro";
@@ -77,4 +87,10 @@ public class usuarioController {
         }
         return listaUsuarios;
     }
+    @RequestMapping("/cerrarSesion")
+    public String cerrarSesion(HttpSession session) {
+       session.invalidate();
+        return "login";
+    }
+    
 }

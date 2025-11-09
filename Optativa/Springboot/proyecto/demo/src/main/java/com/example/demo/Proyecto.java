@@ -56,24 +56,25 @@ public class Proyecto {
         tareas.remove(tarea);
     }
 
-    public double getPorcentajeCompletado(Proyecto proyecto) {
+    public double getPorcentajeCompletado() {
+
+        if(tareas.isEmpty()) return 0;
 
         double completadas = 0;
-        double total = proyecto.tareas.size();
 
-        for (Tarea tarea : proyecto.tareas) {
-            if (tarea.isEstado() == true) {
+        for (Tarea tarea : tareas) {
+            if (tarea.isEstado()) {
                 completadas++;
             }
         }
-        return completadas / total;
+        return (completadas / tareas.size()) *100;
     }
 
-    public ArrayList<Tarea> ordenarPorPrioridad(Proyecto proyecto) {
+    public ArrayList<Tarea> ordenarPorPrioridad() {
 
-            Collections.sort(proyecto.tareas);
+            Collections.sort(tareas);
 
-        return proyecto.tareas;
+        return tareas;
     }
 
     @Override
