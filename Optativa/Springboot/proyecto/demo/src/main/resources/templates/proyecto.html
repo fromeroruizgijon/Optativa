@@ -39,7 +39,7 @@
             fecha de creación:
             <span th:text="${tarea.fechaCreacion}"></span>
             <br>
-            <button th:attr="data-formid=${'formSecundaria-' + tarea.titulo}">+ Nueva tarea</button>
+            <button th:attr="data-formid=${'formSecundaria-' + tarea.titulo}">+ Nueva subtarea</button>
             
             <form th:id="${'formSecundaria-' + tarea.titulo}" action="/insertarTareaSecundaria" method="get" style="display: none;">
                 <input type="hidden" name="nombreProyecto" th:value="${proyecto.nombre}">
