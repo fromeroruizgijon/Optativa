@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Crear Proyecto</title>
     <link rel="stylesheet" href="crearProyectos.css">
 </head>
 <body>
@@ -11,9 +11,13 @@
         <ul>
             <li>sesion: <span th:text="${session.usuario.nombre}"></span></li>
             <li><a href="/cerrarSesion">Cerrar sesión</a></li>
-            <li><a href="/index">Inicio</a></li>
+            <li><a href="/">Inicio</a></li>
         </ul>
     </nav>
+    <header class="header">
+        <img src="logoFium.png" alt="Logo FiumPlan" class="logo">
+        <h1 class="titulo">FiumPlan</h1>
+    </header>
     <div class="container">
         <h3>Crea tu nuevo proyecto: </h3>
 
@@ -23,9 +27,9 @@
 
         <form action="/insertarProyecto" method="post">
             <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre">
+            <input type="text" name="nombre" required>
            <label for="descripcion">Descripción:</label>
-            <textarea name="descripcion"></textarea>
+            <textarea name="descripcion" required></textarea>
             <input type="submit" value="Crear">
         </form>
     </div>

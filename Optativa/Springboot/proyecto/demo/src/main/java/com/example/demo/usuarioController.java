@@ -3,14 +3,12 @@ package com.example.demo;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 
 
@@ -62,7 +60,7 @@ public class usuarioController {
             usuarioStr += usuario.getNombre() + "_" + usuario.getPassword()+ "_" + usuario.getEmail() + "|";  
         }
         Cookie cookie = new Cookie("usuarios", usuarioStr);
-        cookie.setMaxAge(60*20);
+        cookie.setMaxAge(60*60*5);
         cookie.setPath("/");
         response.addCookie(cookie);
         return "login";

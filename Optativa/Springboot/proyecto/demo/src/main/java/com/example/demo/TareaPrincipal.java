@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class TareaPrincipal extends Tarea{
 
     private ArrayList<TareaSecundaria> tareasSecundarias;
+    
     public TareaPrincipal(ArrayList<TareaSecundaria> tareaSecundarias,String titulo, String description, boolean estado, int prioridad, LocalDate fechaCreacion) {
         super(titulo, description, estado, prioridad, fechaCreacion);
         this.tareasSecundarias = tareaSecundarias;

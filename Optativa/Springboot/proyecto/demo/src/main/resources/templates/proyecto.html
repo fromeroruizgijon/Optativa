@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tus proyectos</title>
     <link rel="stylesheet"th:href="@{/proyecto.css}">
 </head>
 <body>
@@ -11,12 +11,24 @@
         <ul>
             <li>sesion: <span th:text="${session.usuario.nombre}"></span></li>
             <li><a href="/cerrarSesion">Cerrar sesión</a></li>
-            <li><a href="/index">Inicio</a></li>
+            <li><a href="/">Inicio</a></li>
         </ul>
     </nav>
+     <header class="header">
+        <img src="logoFium.png" alt="Logo FiumPlan" class="logo">
+        <h1 class="titulo">FiumPlan</h1>
+    </header>
     <div class="container">
         <h1 th:text="${proyecto.nombre}"></h1>
         <p th:text="${proyecto.descripcion}"></p>
+
+        <div class="progress-container">
+            <div class="progress-bar" 
+                th:style="'width:' + ${proyecto.porcentajeCompletado} + '%'">
+            </div>
+        </div>
+
+    <p th:text="'Progreso: ' + ${#numbers.formatDecimal(proyecto.porcentajeCompletado, 0, 0)} + '%'"></p>
 
         <button onclick="cambiaForm('formTareaPrincipal')">+ Nueva tarea</button>
 
@@ -32,6 +44,11 @@
         <a th:href="@{/proyecto/ordenarPrioridad(nombre=${proyecto.nombre})}">Ordenar tareas por prioridad</a>
         <div th:each="tarea : ${proyecto.tareas}">
             <h3 th:text="${tarea.titulo}"></h3>
+            <form th:action="@{/cambiarEstadoTarea}" method="get" class="checkTarea">
+                <input type="hidden" name="nombreProyecto" th:value="${proyecto.nombre}">
+                <input type="hidden" name="tituloTarea" th:value="${tarea.titulo}">
+                Terminada <input type="checkbox" name="estado" value="true" th:checked="${tarea.estado}" onchange="this.form.submit()">
+            </form>
             <p th:text="${tarea.description}"></p>
             Prioridad:
             <span th:text="${tarea.prioridad}"></span>
