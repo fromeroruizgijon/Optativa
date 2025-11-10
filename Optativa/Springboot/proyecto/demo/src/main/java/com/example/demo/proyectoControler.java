@@ -5,10 +5,13 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 
@@ -25,6 +28,7 @@ public class proyectoControler {
     public String mostrarFormularioP() {
         return "crearProyecto";
     }
+    
 
     @RequestMapping("/insertarProyecto")
     public String insertarProyecto(@RequestParam("nombre")String nombre, @RequestParam("descripcion")String descripcion, HttpSession session, Model model) {
@@ -63,7 +67,7 @@ public class proyectoControler {
         }
 
         if(proyectoEncontrado != null){
-            model.addAttribute("Proyecto", proyectoEncontrado);
+            model.addAttribute("proyecto", proyectoEncontrado);
             return "proyecto";
         }else{
             model.addAttribute("error", "Proyecto no encontrado");
@@ -88,7 +92,7 @@ public class proyectoControler {
             proyecto.insertarTarea(tareaPrincipal);
         }
         session.setAttribute("proyectos", proyectos);
-        return "verProyecto?nombre=" + nombreProyecto;
+        return "redirect:/verProyecto?nombre=" + nombreProyecto;
     }
 
     @RequestMapping("/insertarTareaSecundaria")
@@ -116,8 +120,38 @@ public class proyectoControler {
             }
         }
         session.setAttribute("proyectos", proyectos);
-       return "verProyecto?nombre=" + nombreProyecto;
+       return "redirect:/verProyecto?nombre=" + nombreProyecto;
     }
     
-    
+    @GetMapping("/proyecto/ordenarPrioridad")
+    public String ordenarTareasPorPrioridad(@RequestParam("nombre") String nombreProyecto, HttpSession session, Model model) {
+        ArrayList<Proyecto> proyectos = (ArrayList<Proyecto>) session.getAttribute("proyectos");
+        if(proyectos == null){
+            proyectos = new ArrayList<>();
+        }
+
+        Proyecto proyecto = null;
+        for (Proyecto p : proyectos) {
+            if(p.getNombre().equalsIgnoreCase(nombreProyecto)){
+                proyecto = p;
+            }
+        }
+
+        if(proyecto != null){
+            proyecto.getTareas().sort((t2, t1) -> t1.getPrioridad() - t2.getPrioridad());
+            for(Tarea t : proyecto.getTareas()){
+                if(t instanceof TareaPrincipal tareaPrincipal){
+                    tareaPrincipal.getTareasSecundarias().sort(
+                        (s1, s2) -> s1.getPrioridad() - s2.getPrioridad()
+                    );
+                }
+            }
+            model.addAttribute("proyecto", proyecto);
+            return "proyecto";
+        } else {
+            model.addAttribute("error", "Proyecto no encontrado");
+            return "index";
+        }
+    }
+
 }
