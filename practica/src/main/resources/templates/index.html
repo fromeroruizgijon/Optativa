@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+        .aviso{
+            color: red;
+            font-size: x-large;
+        }
+    </style>
+    <span>Bienvenido: </span>
+    <span th:if="${nombre}" th:text="${nombre}"></span>
+    <br>
+    <span>Te quedan estos intentos</span>
+    <span th:if="${contador != null ? contador : ''}" th:text="${contador}"></span>
+    <br>
+    <form action="/guardaNombre">
+        <input type="text" name="nombre">
+        <input type="submit" value="registrar">
+    </form>
+    <span th:if="${aviso}" th:text="${aviso}" class="aviso"></span>
+</body>
+</html>
