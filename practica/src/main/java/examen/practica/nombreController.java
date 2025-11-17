@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class nombreController {
 
-    @RequestMapping("/")
+    @RequestMapping("sesion")
     public String devuelveIndex(HttpSession session, Model model) {
         String nombre = (String) session.getAttribute("nombre");
         model.addAttribute("nombre", nombre);
@@ -30,7 +30,7 @@ public class nombreController {
                 model.addAttribute("contador", contador);
             }
         }
-        return "index";
+        return "sesion";
     }
     
     @RequestMapping("/guardaNombre")
@@ -42,7 +42,7 @@ public class nombreController {
             model.addAttribute("contador", contador);
         }
         model.addAttribute("nombre", nombre);
-        return "index";
+        return "sesion";
     }
     
 
