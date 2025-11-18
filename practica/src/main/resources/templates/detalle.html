@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Tú anuncio:</h1>
+    Nombre:
+    <span th:text="${anuncio.nombre}"></span>
+    <br>
+    Asunto:
+    <span th:text="${anuncio.asunto}"></span>
+    <br>
+    <span th:text="${anuncio.comentario}"></span>
+</body>
+</html>
