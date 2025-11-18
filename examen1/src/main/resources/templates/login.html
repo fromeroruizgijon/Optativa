@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="color: blue;">Bienvenidos a la gestión de libros (aplicación reserbada a autores)</h1>
+    <form action="procesalogin">
+        Nombre de autor:
+        <input type="text" name="usuario" placeholder="" required>
+        *
+        <input type="submit" value="login">
+    </form>
+    * campos obligaotrios 
+
+    <br>
+    <span th:if="${aviso}"> <span th:text="${aviso}" style="color: red;"></span></span>
+     
+</body>
+</html>
