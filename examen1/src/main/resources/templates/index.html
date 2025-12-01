@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        table, td, tr{
+            border: 1px solid black;
+        }
+    </style>
+     <h1 style="color: blue;">Bienvenidos a la gestión de libros (aplicación reserbada a autores)</h1>
+     <a href="librosForm">Crear nuevo libro</a>
+     <table>
+        <tr th:each="libro : ${libros}">
+            <td>
+                <span th:text="${libro.getTitulo()}"></span>
+            </td>
+            <td>
+                <span th:text="${libro.getAutor()}"></span>
+            </td>
+            <td>
+                <span th:text="${libro.getPrecio()}"></span>
+            </td>
+            <td>
+                <span th:text="${libro.getIsbn()}"></span>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr th:each="autor : ${autores}">
+            <td th:text="${autor}">
+                
+            </td>
+        </tr>
+        <tr th:each="pasword : ${paswords}">
+            <td th:text="${pasword}">
+            </td>
+        </tr>
+    </table>
+    <a href="/cerrarSesion">Cerrar sesion</a>
+</body>
+</html>
