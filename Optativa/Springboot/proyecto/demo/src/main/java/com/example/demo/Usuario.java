@@ -1,10 +1,27 @@
 package com.example.demo;
+import java.util.List;
 
+//usamos el * para importar toda la librería jakarta.persistence (probablemente no sea lo mejor, investigar)
+import jakarta.persistence.*;
+
+//convertimos la clase en una entidad
+@Entity
 public class Usuario {
+    //metemos un atributo id para identificar los usuarios
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String nombre;
     private String password;
     private String email;
+    //unsamos @enumerated para que no tome el valor del enum como binario sino como string
+    @Enumerated(EnumType.STRING)
     private Roles rol;
+    //creamos una relación entre la entidad usuarios y la de proyecto
+    @OneToMany(mappedBy = "creador", cascade = CascadeType.ALL)
+    private List<Proyecto> proyectos;
+    //para JPA tiene que haber un constructor vacío
+    public Usuario(){}
 
     public Usuario(String nombre, String password, String email, Roles rol) {
         this.nombre = nombre;
@@ -41,6 +58,24 @@ public class Usuario {
 
     public void setRol(Roles rol) {
         this.rol = rol;
+    }
+
+    //se crean getters y setters de id y de la list de proyectos del usuario
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public List<Proyecto> getProyectos() {
+        return proyectos;
+    }
+
+    public void setProyectos(List<Proyecto> proyectos) {
+        this.proyectos = proyectos;
     }
 
     @Override
