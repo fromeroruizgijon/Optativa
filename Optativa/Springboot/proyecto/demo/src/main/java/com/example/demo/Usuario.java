@@ -14,7 +14,7 @@ public class Usuario {
     private String nombre;
     private String password;
     private String email;
-    //unsamos @enumerated para que no tome el valor del enum como binario sino como string
+    //usamos @enumerated para que no tome el valor del enum como binario sino como string
     @Enumerated(EnumType.STRING)
     private Roles rol;
     //creamos una relación entre la entidad usuarios y la de proyecto

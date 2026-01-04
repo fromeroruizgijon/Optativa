@@ -2,17 +2,36 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Proyecto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     private String nombre;
+
+    //se le asigna un valor largo para permitir descripciones largas
+    @Column(length = 1000)
     private String descripcion;
-    private ArrayList<Tarea> tareas;
+
+    @ManyToOne
+    //esta es la clave foránea
+    @JoinColumn(name = "usuario_id")
     private Usuario creador;
 
-    public Proyecto(String nombre, String descripcion, ArrayList<Tarea> tareas, Usuario creador) {
+    //relación de tareas
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
+    private List<Tarea> tareas = new ArrayList<>();
+
+    public Proyecto(){}
+
+    public Proyecto(String nombre, String descripcion, Usuario creador) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.tareas = tareas;
         this.creador = creador;
     }
 
@@ -32,11 +51,11 @@ public class Proyecto {
         this.descripcion = descripcion;
     }
 
-    public ArrayList<Tarea> getTareas() {
-        return tareas;
+    public List<Tarea> getTareas() {
+        return (ArrayList<Tarea>) tareas;
     }
 
-    public void setTareas(ArrayList<Tarea> tareas) {
+    public void setTareas(List<Tarea> tareas) {
         this.tareas = tareas;
     }
 
@@ -50,10 +69,12 @@ public class Proyecto {
 
     public void insertarTarea(Tarea tarea) {
         tareas.add(tarea);
+        tarea.setProyecto(this);
     }
 
     public void eliminarTarea(Tarea tarea) {
         tareas.remove(tarea);
+        tarea.setProyecto(null);
     }
 
     public double getPorcentajeCompletado() {
@@ -70,7 +91,7 @@ public class Proyecto {
         return (completadas / tareas.size()) *100;
     }
 
-    public ArrayList<Tarea> ordenarPorPrioridad() {
+    public List<Tarea> ordenarPorPrioridad() {
 
             Collections.sort(tareas);
 

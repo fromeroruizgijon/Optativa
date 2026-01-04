@@ -2,22 +2,30 @@ package com.example.demo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.*;
+
+@Entity
+@DiscriminatorValue("PRINCIPAL")
 public class TareaPrincipal extends Tarea{
 
-    private ArrayList<TareaSecundaria> tareasSecundarias;
+    @OneToMany(mappedBy = "tareaPadre", cascade = CascadeType.ALL)
+    private List<TareaSecundaria> tareasSecundarias = new ArrayList<>();
+
+    public TareaPrincipal(){}
     
-    public TareaPrincipal(ArrayList<TareaSecundaria> tareaSecundarias,String titulo, String description, boolean estado, int prioridad, LocalDate fechaCreacion) {
+    public TareaPrincipal(String titulo, String description, boolean estado, int prioridad, LocalDate fechaCreacion) {
         super(titulo, description, estado, prioridad, fechaCreacion);
-        this.tareasSecundarias = tareaSecundarias;
     }
-    public ArrayList<TareaSecundaria> getTareasSecundarias() {
+    public List<TareaSecundaria> getTareasSecundarias() {
         return tareasSecundarias;
     }
-    public void setTareasSecundarias(ArrayList<TareaSecundaria> tareasSecundarias) {
+    public void setTareasSecundarias(List<TareaSecundaria> tareasSecundarias) {
         this.tareasSecundarias = tareasSecundarias;
     }
     public void insertarSubtarea(TareaSecundaria tarea){
+        tarea.setTareaPadre(this);
         tareasSecundarias.add(tarea);
     }
     public void eliminarSubtarea(TareaSecundaria tarea){

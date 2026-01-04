@@ -2,12 +2,28 @@ package com.example.demo;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_tarea")
 public class Tarea implements Comparable<Tarea> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String titulo;
     private String description;
     private boolean estado;
     private int prioridad;
     private LocalDate fechaCreacion;
+
+    @ManyToOne
+    @JoinColumn(name = "proyecto_id")
+    private Proyecto proyecto;
+    
+    public Tarea(){}
 
     public Tarea(String titulo, String description, boolean estado, int prioridad, LocalDate fechaCreacion) {
         this.titulo = titulo;
@@ -55,6 +71,12 @@ public class Tarea implements Comparable<Tarea> {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+    public Proyecto getProyecto(){
+        return proyecto;
+    }
+    public void setProyecto(Proyecto proyecto){
+        this.proyecto = proyecto;
     }
 
     public void marcarDesmarcar() {
