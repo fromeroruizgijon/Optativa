@@ -1,0 +1,124 @@
+package com.example.demo;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.servlet.http.HttpSession;
+
+@Controller
+public class ProyectoControler {
+
+    @Autowired
+    private ProyectoRepository proyectoRepository;
+    
+    @RequestMapping("/")
+    public String mostrarInicio(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if(usuario == null){
+            return "redirect:/login";
+        }
+        List<Proyecto> misProyectos = proyectoRepository.findByCreador(usuario);
+        model.addAttribute("listaProyectos", misProyectos);
+        return "index";
+    }
+    
+    @RequestMapping("/crearProyecto")
+    public String mostrarFormularioP() {
+        return "crearProyecto";
+    }
+    
+
+    @RequestMapping("/insertarProyecto")
+    public String insertarProyecto(@RequestParam("nombre")String nombre, @RequestParam("descripcion")String descripcion, HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Proyecto existente = proyectoRepository.findByNombre(nombre);
+
+        if(existente != null){
+            model.addAttribute("error", "Ya existe un proyecto con ese nombre");
+            return "crearProyecto";
+        }
+
+        Proyecto nuevoProyecto = new Proyecto(nombre, descripcion, usuario);
+        proyectoRepository.save(nuevoProyecto);
+        return "redirect:/";
+    }
+    @RequestMapping("/verProyecto")
+    public String verProyecto(@RequestParam(name = "nombre")String nombreProyecto, HttpSession session, Model model) {
+       Proyecto proyectoEncontrado = proyectoRepository.findByNombre(nombreProyecto);
+
+       if(proyectoEncontrado != null){
+        model.addAttribute("proyecto", proyectoEncontrado);
+        return "proyecto";
+       }else{
+        return "redirect:/";
+       }
+    }
+    
+    @RequestMapping("/insertarTareaPrincipal")
+    public String insertarTareaPrincipal(@RequestParam(name = "nombreProyecto")String nombreProyecto, @RequestParam(name = "titulo")String titulo, @RequestParam(name = "descripcion")String descripcion, @RequestParam(name = "prioridad")int prioridad) {
+        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
+
+        if(proyecto != null){
+            TareaPrincipal tareaPrincipal = new TareaPrincipal(titulo, descripcion, false, prioridad, LocalDate.now());
+            proyecto.insertarTarea(tareaPrincipal);
+            proyectoRepository.save(proyecto);
+        }
+        return "redirect:/verProyecto?nombre=" + nombreProyecto;
+    }
+
+    @RequestMapping("/insertarTareaSecundaria")
+    public String insertarTareaSecundaria(@RequestParam(name = "nombreProyecto")String nombreProyecto,@RequestParam(name = "tituloPrincipal")String tituloPrincipal, @RequestParam(name = "tituloSecundaria")String tituloSecundaria, @RequestParam(name = "descripcion")String descripcion, @RequestParam(name = "prioridad")int prioridad, @RequestParam("categoria")String categoria) {
+        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
+        if(proyecto != null){
+            for (Tarea t : proyecto.getTareas()) {
+                if(t instanceof TareaPrincipal && t.getTitulo().equalsIgnoreCase(tituloPrincipal)){
+                    TareaPrincipal tareaPrincipal = (TareaPrincipal) t;
+                    TareaSecundaria tareaSecundaria = new TareaSecundaria(categoria, tituloSecundaria, descripcion, false, prioridad, LocalDate.now());
+                    tareaPrincipal.insertarSubtarea(tareaSecundaria);
+                    proyectoRepository.save(proyecto);
+                }
+            }
+        }
+        return "redirect:/verProyecto?nombre=" + nombreProyecto;
+    }
+    
+    @GetMapping("/proyecto/ordenarPrioridad")
+    public String ordenarTareasPorPrioridad (@RequestParam("nombre") String nombreProyecto, Model model) {
+        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
+        if(proyecto != null){
+            proyecto.getTareas().sort((t2, t1) -> t1.getPrioridad() - t2.getPrioridad());
+
+            for (Tarea t  : proyecto.getTareas()) {
+                if(t instanceof TareaPrincipal tareaPrincipal){
+                    tareaPrincipal.getTareasSecundarias().sort((s2, s1) -> s1.getPrioridad() - s2.getPrioridad());
+                }
+            }
+            model.addAttribute("proyecto", proyecto);
+            return "proyecto";
+        }else{
+            return "redirect:/";
+        }
+    }
+    @RequestMapping("/cambiarEstadoTarea")
+    public String cambiarEstadoTarea(@RequestParam("nombreProyecto")String nombreProyecto, @RequestParam("tituloTarea")String tituloTarea,@RequestParam(value = "estado", required = false)Boolean estado) {
+        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
+        if(proyecto != null){
+            for ( Tarea tarea : proyecto.getTareas()) {
+                if(tarea.getTitulo().equalsIgnoreCase(tituloTarea)){
+                    tarea.setEstado(estado != null);
+                }
+            }
+            proyectoRepository.save(proyecto);
+        }
+        return "redirect:/verProyecto?nombre=" + nombreProyecto;
+    }
+    
+
+}
