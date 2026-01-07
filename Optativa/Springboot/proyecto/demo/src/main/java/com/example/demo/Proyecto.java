@@ -52,7 +52,7 @@ public class Proyecto {
     }
 
     public List<Tarea> getTareas() {
-        return (ArrayList<Tarea>) tareas;
+        return tareas;
     }
 
     public void setTareas(List<Tarea> tareas) {

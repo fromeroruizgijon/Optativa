@@ -29,7 +29,7 @@ public class TareaSecundaria extends Tarea {
         this.categoria = categoria;
     }
 
-    public TareaPrincipal geTareaPrincipal(){
+    public TareaPrincipal getTareaPadre(){
         return tareaPadre;
     }
 

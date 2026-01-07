@@ -21,7 +21,7 @@
     <div class="container">
         <h1>Mis Proyectos: </h1>
         <ul>
-            <li th:each="proyecto : ${session.proyectos}">
+            <li th:each="proyecto : ${listaProyectos}">
                 Nombre:
                 <a th:href="@{/verProyecto(nombre=${proyecto.nombre})}" th:text="${proyecto.nombre}" ></a>
                 Descripción:
