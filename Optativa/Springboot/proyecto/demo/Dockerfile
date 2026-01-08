@@ -1,11 +1,15 @@
+# --- ETAPA 1: CONSTRUIR (Docker descarga su propio Maven) ---
+FROM maven:3.8.5-openjdk-17 AS builder
+WORKDIR /app
+# Copiamos todos tus archivos al contenedor
+COPY . .
+# Docker ejecuta el comando 'package' saltándose los tests
+RUN mvn clean package -DskipTests
 
+# --- ETAPA 2: EJECUTAR (La imagen final ligera) ---
 FROM eclipse-temurin:17-jdk-jammy
-
-# 2. Copiamos tu JAR generado dentro del contenedor con el nombre 'app.jar'
-COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
-
-# 3. Informamos que la app usa el puerto 8080
+WORKDIR /app
+# Cogemos el .jar que se fabricó en la Etapa 1
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# 4. Comando para arrancar la app
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
