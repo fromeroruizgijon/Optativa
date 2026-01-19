@@ -1,7 +1,6 @@
-version: '3.8'
+
 
 services:
-  # --- SERVICIO 1: BASE DE DATOS ---
   mysqldb:
     image: mysql:8.0
     container_name: fiumplan_db_docker
@@ -11,22 +10,20 @@ services:
       MYSQL_DATABASE: fiumplan_db
       MYSQL_ROOT_PASSWORD: toor
     volumes:
-      - mysql_data:/var/lib/mysql # ¡Importante! Guarda los datos aunque apagues el PC
+      - mysql_data:/var/lib/mysql 
 
-  # --- SERVICIO 2: TU APP SPRING BOOT ---
   app:
-    build: .             # Usa el Dockerfile que está en esta carpeta
+    build: .             
     container_name: fiumplan_app_docker
     ports:
-      - "8080:8080"      # Podrás entrar en localhost:8080
+      - "8080:8080"      
     depends_on:
-      - mysqldb          # Espera a que la base de datos arranque antes de iniciar
+      - mysqldb          
     environment:
-      # Sobreescribimos la conexión de application.properties para usar el contenedor 'mysqldb'
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/fiumplan_db?allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: toor
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
 volumes:
-  mysql_data: # Define el volumen para guardar los datos
+  mysql_data: 
