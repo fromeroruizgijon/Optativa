@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
 
 
 
@@ -37,9 +39,21 @@ public class UsuarioController {
         return "redirect:/registro?error=true";
        }
     }
-    @RequestMapping("/insertarUsuario")
-    public String procesarRegistro(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password){
+    @Autowired
+    private CloudinaryService cloudinaryService;
+    @PostMapping("/insertarUsuario")
+    public String procesarRegistro(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam("archivo") MultipartFile archivo){
         Usuario nuevoUsuario = new Usuario (nombre, password, email, Roles.normal);
+
+        if (!archivo.isEmpty()) {
+            // Si el usuario subió algo, lo mandamos a Cloudinary
+            String url = cloudinaryService.subirImagen(archivo);
+            nuevoUsuario.setImagenUrl(url);
+        } else {
+            // Si NO subió nada, ponemos una foto por defecto (esta es una imagen genérica de internet)
+            nuevoUsuario.setImagenUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+        }
+
         usuarioRepository.save(nuevoUsuario);
         return "redirect:/login";
     }

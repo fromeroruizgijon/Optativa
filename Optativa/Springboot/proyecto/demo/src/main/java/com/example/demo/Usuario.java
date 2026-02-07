@@ -14,6 +14,7 @@ public class Usuario {
     private String nombre;
     private String password;
     private String email;
+    private String imagenUrl;
     //usamos @enumerated para que no tome el valor del enum como binario sino como string
     @Enumerated(EnumType.STRING)
     private Roles rol;
@@ -76,6 +77,14 @@ public class Usuario {
 
     public void setProyectos(List<Proyecto> proyectos) {
         this.proyectos = proyectos;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 
     @Override

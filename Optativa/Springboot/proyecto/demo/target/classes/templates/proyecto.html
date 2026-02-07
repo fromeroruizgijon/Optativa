@@ -9,6 +9,9 @@
 <body>
     <nav class="nav">
         <ul>
+            <img th:src="${session.usuario.imagenUrl}" 
+                 alt="Avatar" 
+                 style="width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 5px;">
             <li>sesion: <span th:text="${session.usuario.nombre}"></span></li>
             <li><a href="/cerrarSesion">Cerrar sesión</a></li>
             <li><a href="/">Inicio</a></li>
