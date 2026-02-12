@@ -7,13 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 
+
 @Controller
 public class ProyectoControler {
+
+    @Autowired
+    private PdfService pdfService;
+
+    @Autowired
+    private TareaRepository tareaRepository;
 
     @Autowired
     private ProyectoRepository proyectoRepository;
@@ -35,18 +43,27 @@ public class ProyectoControler {
     }
     
 
-    @RequestMapping("/insertarProyecto")
-    public String insertarProyecto(@RequestParam("nombre")String nombre, @RequestParam("descripcion")String descripcion, HttpSession session, Model model) {
+    // Modifica ligeramente tu método existente 'insertarProyecto' para aceptar un ID
+    @PostMapping("/guardarProyecto") // Cambia la acción del form a esta
+    public String guardarProyecto(@RequestParam(name="id", required=false) Long id,
+                                  @RequestParam("nombre") String nombre, 
+                                  @RequestParam("descripcion") String descripcion, 
+                                  HttpSession session) {
+        
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        Proyecto existente = proyectoRepository.findByNombre(nombre);
+        Proyecto proyecto;
 
-        if(existente != null){
-            model.addAttribute("error", "Ya existe un proyecto con ese nombre");
-            return "crearProyecto";
+        if (id != null) {
+            // EDICIÓN: Buscamos el existente y actualizamos datos
+            proyecto = proyectoRepository.findById(id).orElse(new Proyecto());
+            proyecto.setNombre(nombre);
+            proyecto.setDescripcion(descripcion);
+        } else {
+            // CREACIÓN: Nuevo objeto
+            proyecto = new Proyecto(nombre, descripcion, usuario);
         }
-
-        Proyecto nuevoProyecto = new Proyecto(nombre, descripcion, usuario);
-        proyectoRepository.save(nuevoProyecto);
+        
+        proyectoRepository.save(proyecto); // .save() sirve para crear Y para actualizar
         return "redirect:/";
     }
     @RequestMapping("/verProyecto")
@@ -119,6 +136,36 @@ public class ProyectoControler {
         }
         return "redirect:/verProyecto?nombre=" + nombreProyecto;
     }
-    
+    @GetMapping("/borrarProyecto")
+    public String borrarProyecto(@RequestParam("id") Long id) {
+        proyectoRepository.deleteById(id);
+        return "redirect:/";
+    }
+    @GetMapping("/editarProyecto")
+    public String editarProyecto(@RequestParam("id") Long id, Model model) {
+        Proyecto proyecto = proyectoRepository.findById(id).orElse(null);
+        model.addAttribute("proyecto", proyecto);
+        return "crearProyecto";
+    }
+
+    @GetMapping("/borrarTarea")
+        public String borrarTarea(@RequestParam("id") Long id, @RequestParam("nombreProyecto") String nombreProyecto) {
+            tareaRepository.deleteById(id);
+            return "redirect:/verProyecto?nombre=" + nombreProyecto;
+        }
+    @GetMapping("/descargarPdf")
+    public void descargarPdf(@RequestParam("id") Long id, jakarta.servlet.http.HttpServletResponse response) throws java.io.IOException {
+        Proyecto proyecto = proyectoRepository.findById(id).orElse(null);
+        
+        if(proyecto != null){
+            response.setContentType("application/pdf");
+            // Esta línea hace que el navegador te pregunte dónde guardar el archivo
+            String headerKey = "Content-Disposition";
+            String headerValue = "attachment; filename=proyecto_" + proyecto.getNombre() + ".pdf";
+            response.setHeader(headerKey, headerValue);
+            
+            pdfService.exportarProyecto(response, proyecto);
+        }
+    }
 
 }

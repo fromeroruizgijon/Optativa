@@ -79,6 +79,14 @@ public class Tarea implements Comparable<Tarea> {
         this.proyecto = proyecto;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void marcarDesmarcar() {
         if (this.estado) {
             this.estado = false;

@@ -2,38 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Proyecto</title>
-    <link rel="stylesheet" href="crearProyectos.css">
+    <title>Nuevo Proyecto</title>
+    <link rel="stylesheet" href="css/crearProyecto.css">
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <img th:src="${session.usuario.imagenUrl}" 
-                 alt="Avatar" 
-                 style="width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 5px;">
-            <li>sesion: <span th:text="${session.usuario.nombre}"></span></li>
-            <li><a href="/cerrarSesion">Cerrar sesión</a></li>
-            <li><a href="/">Inicio</a></li>
-        </ul>
-    </nav>
-    <header class="header">
-        <img src="logoFium.png" alt="Logo FiumPlan" class="logo">
-        <h1 class="titulo">FiumPlan</h1>
-    </header>
     <div class="container">
-        <h3>Crea tu nuevo proyecto: </h3>
+        <h3 th:text="${proyecto != null} ? 'Editar Proyecto' : 'Nuevo Proyecto'"></h3>
 
         <div th:if="${error}" class="error">
             <span th:text="${error}"></span>
         </div>
 
-        <form action="/insertarProyecto" method="post">
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" required>
-           <label for="descripcion">Descripción:</label>
-            <textarea name="descripcion" required></textarea>
-            <input type="submit" value="Crear">
+        <form action="/guardarProyecto" method="post">
+            <input type="hidden" name="id" th:value="${proyecto != null ? proyecto.id : ''}">
+            
+            <label for="nombre">Nombre del Proyecto</label>
+            <input type="text" name="nombre" required placeholder="Ej: Web Corporativa" th:value="${proyecto != null ? proyecto.nombre : ''}">
+            
+            <label for="descripcion">Descripción</label>
+            <textarea name="descripcion" required placeholder="Describe el objetivo del proyecto..." th:text="${proyecto != null ? proyecto.descripcion : ''}"></textarea>
+            
+            <div class="actions">
+                <a href="/" class="btn-cancel">Cancelar</a>
+                <input type="submit" value="Guardar Proyecto">
+            </div>
         </form>
     </div>
 </body>

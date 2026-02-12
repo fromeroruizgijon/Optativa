@@ -2,41 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <link rel="stylesheet" href="index.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <img th:src="${session.usuario.imagenUrl}" 
-                 alt="Avatar" 
-                 style="width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 5px;">
-            <li>sesion: <span th:text="${session.usuario.nombre}"></span></li>
-            <li><a href="/cerrarSesion">Cerrar sesión</a></li>
-            <li><a href="/">Inicio</a></li>
-        </ul>
-    </nav>
-     <header class="header">
-    <img src="logoFium.png" alt="Logo FiumPlan" class="logo">
-    <h1 class="titulo">FiumPlan</h1>
-</header>
-    <div class="container">
-        <h1>Mis Proyectos: </h1>
-        <ul>
-            <li th:each="proyecto : ${listaProyectos}">
-                Nombre:
-                <a th:href="@{/verProyecto(nombre=${proyecto.nombre})}" th:text="${proyecto.nombre}" ></a>
-                Descripción:
-                <span th:text="${proyecto.descripcion}"></span>
-            </li>
-            <li>
-                <a href="crearProyecto">Crear nuevo proyecto</a>
-            </li>
-        </ul>
-    </div>
-    <div th:if="${error}" class="error">
-    <p th:text="${error}"></p>
-</div>
+    <header class="app-header">
+        <div class="brand">FiumPlan Panel</div>
+        <nav class="user-nav">
+            <ul>
+                <li style="display: flex; align-items: center; gap: 10px;">
+                    <img th:src="${session.usuario.imagenUrl}" style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #e2e8f0;">
+                    <span th:text="${session.usuario.nombre}"></span>
+                </li>
+                <li><a href="/cerrarSesion">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="section-header">
+            <h2>Proyectos Activos</h2>
+            <a href="crearProyecto" class="btn-create-main">Crear Nuevo Proyecto</a>
+        </div>
+        
+        <div class="projects-grid">
+            <div th:each="proyecto : ${listaProyectos}" class="project-panel">
+                
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <a th:href="@{/verProyecto(nombre=${proyecto.nombre})}" th:text="${proyecto.nombre}"></a>
+                    </h3>
+                </div>
+
+                <div class="panel-body">
+                    <p class="panel-desc" th:text="${proyecto.descripcion}"></p>
+                    
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Completado</span>
+                            <span th:text="${#numbers.formatDecimal(proyecto.porcentajeCompletado, 0, 0)} + '%'"></span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" th:style="'width:' + ${proyecto.porcentajeCompletado} + '%'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-footer">
+                    <a th:href="@{/editarProyecto(id=${proyecto.id})}" class="action-link link-edit">Editar</a>
+                    <a th:href="@{/borrarProyecto(id=${proyecto.id})}" 
+                       class="action-link link-delete"
+                       onclick="return confirm('¿Atención: Se borrará el proyecto y sus tareas. ¿Continuar?')">Borrar</a>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
