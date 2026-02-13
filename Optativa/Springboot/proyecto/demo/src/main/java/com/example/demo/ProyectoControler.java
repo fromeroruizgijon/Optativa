@@ -26,84 +26,124 @@ public class ProyectoControler {
     @Autowired
     private ProyectoRepository proyectoRepository;
     
-    @RequestMapping("/")
-    public String mostrarInicio(HttpSession session, Model model) {
+    @GetMapping("/")
+    public String mostrarInicio(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if(usuario == null){
-            return "redirect:/login";
-        }
-        List<Proyecto> misProyectos = proyectoRepository.findByCreador(usuario);
-        model.addAttribute("listaProyectos", misProyectos);
+        if (usuario == null) return "redirect:/login";
+
+        List<Proyecto> proyectos = proyectoRepository.findByCreador(usuario);
+
+        model.addAttribute("listaProyectos", proyectos);
         return "index";
     }
     
-    @RequestMapping("/crearProyecto")
-    public String mostrarFormularioP() {
-        return "crearProyecto";
-    }
-    
-
-    // Modifica ligeramente tu método existente 'insertarProyecto' para aceptar un ID
-    @PostMapping("/guardarProyecto") // Cambia la acción del form a esta
+   @PostMapping("/guardarProyecto")
     public String guardarProyecto(@RequestParam(name="id", required=false) Long id,
                                   @RequestParam("nombre") String nombre, 
                                   @RequestParam("descripcion") String descripcion, 
-                                  HttpSession session) {
-        
+                                  HttpSession session,
+                                  Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) return "redirect:/login";
+        Proyecto proyectoExistente = proyectoRepository.findByNombreAndCreador(nombre, usuario);
+        if (proyectoExistente != null) {
+            if (id == null || !proyectoExistente.getId().equals(id)) {
+                model.addAttribute("error", "Ya tienes un proyecto llamado '" + nombre + "'. Elige otro nombre.");
+                Proyecto proyectoFallido = new Proyecto(nombre, descripcion, usuario);
+                if (id != null) proyectoFallido.setId(id);
+                
+                model.addAttribute("proyecto", proyectoFallido);
+                
+                return "crearProyecto";
+            }
+        }
         Proyecto proyecto;
 
         if (id != null) {
-            // EDICIÓN: Buscamos el existente y actualizamos datos
-            proyecto = proyectoRepository.findById(id).orElse(new Proyecto());
-            proyecto.setNombre(nombre);
-            proyecto.setDescripcion(descripcion);
+            // EDICIÓN
+            proyecto = proyectoRepository.findById(id).orElse(null);
+            if (proyecto != null) {
+                if (proyecto.getCreador().getId().equals(usuario.getId())) {
+                    proyecto.setNombre(nombre);
+                    proyecto.setDescripcion(descripcion);
+                } else {
+                    return "redirect:/?error=No tienes permiso";
+                }
+            } else {
+                return "redirect:/";
+            }
         } else {
-            // CREACIÓN: Nuevo objeto
             proyecto = new Proyecto(nombre, descripcion, usuario);
         }
-        
-        proyectoRepository.save(proyecto); // .save() sirve para crear Y para actualizar
+        proyectoRepository.save(proyecto);
         return "redirect:/";
     }
-    @RequestMapping("/verProyecto")
-    public String verProyecto(@RequestParam(name = "nombre")String nombreProyecto, HttpSession session, Model model) {
-       Proyecto proyectoEncontrado = proyectoRepository.findByNombre(nombreProyecto);
 
-       if(proyectoEncontrado != null){
-        model.addAttribute("proyecto", proyectoEncontrado);
-        return "proyecto";
-       }else{
-        return "redirect:/";
-       }
+    @GetMapping("/crearProyecto")
+    public String mostrarFormularioCrear(Model model) {
+        model.addAttribute("proyecto", new Proyecto());
+        return "crearProyecto";
     }
     
+    @GetMapping("/verProyecto")
+    public String verProyecto(@RequestParam String nombre, Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Proyecto proyecto = proyectoRepository.findByNombreAndCreador(nombre, usuario);
+        if (proyecto != null) {
+            model.addAttribute("proyecto", proyecto);
+            return "proyecto";
+        } else {
+            return "redirect:/?error=No se encuentra el proyecto";
+        }
+    }
     @RequestMapping("/insertarTareaPrincipal")
-    public String insertarTareaPrincipal(@RequestParam(name = "nombreProyecto")String nombreProyecto, @RequestParam(name = "titulo")String titulo, @RequestParam(name = "descripcion")String descripcion, @RequestParam(name = "prioridad")int prioridad) {
-        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
+    public String insertarTareaPrincipal(@RequestParam("idProyecto") Long idProyecto, 
+                                         @RequestParam("titulo") String titulo, 
+                                         @RequestParam("descripcion") String descripcion, 
+                                         @RequestParam("prioridad") int prioridad) {
+        Proyecto proyecto = proyectoRepository.findById(idProyecto).orElse(null);
 
-        if(proyecto != null){
+        if (proyecto != null) {
             TareaPrincipal tareaPrincipal = new TareaPrincipal(titulo, descripcion, false, prioridad, LocalDate.now());
+            tareaPrincipal.setProyecto(proyecto); 
             proyecto.insertarTarea(tareaPrincipal);
             proyectoRepository.save(proyecto);
+            return "redirect:/verProyecto?nombre=" + proyecto.getNombre();
         }
-        return "redirect:/verProyecto?nombre=" + nombreProyecto;
+        
+        return "redirect:/";
     }
 
-    @RequestMapping("/insertarTareaSecundaria")
-    public String insertarTareaSecundaria(@RequestParam(name = "nombreProyecto")String nombreProyecto,@RequestParam(name = "tituloPrincipal")String tituloPrincipal, @RequestParam(name = "tituloSecundaria")String tituloSecundaria, @RequestParam(name = "descripcion")String descripcion, @RequestParam(name = "prioridad")int prioridad, @RequestParam("categoria")String categoria) {
-        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
-        if(proyecto != null){
-            for (Tarea t : proyecto.getTareas()) {
-                if(t instanceof TareaPrincipal && t.getTitulo().equalsIgnoreCase(tituloPrincipal)){
-                    TareaPrincipal tareaPrincipal = (TareaPrincipal) t;
-                    TareaSecundaria tareaSecundaria = new TareaSecundaria(categoria, tituloSecundaria, descripcion, false, prioridad, LocalDate.now());
-                    tareaPrincipal.insertarSubtarea(tareaSecundaria);
-                    proyectoRepository.save(proyecto);
-                }
-            }
+    @GetMapping("/insertarTareaSecundaria")
+    public String insertarTareaSecundaria(@RequestParam Long idProyecto,
+                                          @RequestParam Long idTareaPadre, 
+                                          @RequestParam String tituloSecundaria, 
+                                          @RequestParam String descripcion, 
+                                          @RequestParam int prioridad,
+                                          @RequestParam String categoria) {
+        
+        Proyecto proyecto = proyectoRepository.findById(idProyecto).orElse(null);
+        Tarea tareaPosiblePadre = tareaRepository.findById(idTareaPadre).orElse(null);
+        if (proyecto != null && tareaPosiblePadre instanceof TareaPrincipal) {
+            TareaPrincipal tareaPadre = (TareaPrincipal) tareaPosiblePadre;
+
+            TareaSecundaria subtarea = new TareaSecundaria(); 
+            subtarea.setTitulo(tituloSecundaria);
+            subtarea.setDescription(descripcion);
+            subtarea.setPrioridad(prioridad);
+            subtarea.setCategoria(categoria);
+            subtarea.setEstado(false);
+            subtarea.setFechaCreacion(java.time.LocalDate.now());
+            
+            subtarea.setProyecto(proyecto);
+            subtarea.setTareaPadre(tareaPadre); 
+            
+            tareaRepository.save(subtarea);
+            
+            return "redirect:/verProyecto?nombre=" + proyecto.getNombre();
         }
-        return "redirect:/verProyecto?nombre=" + nombreProyecto;
+        
+        return "redirect:/";
     }
     
     @GetMapping("/proyecto/ordenarPrioridad")
@@ -124,17 +164,18 @@ public class ProyectoControler {
         }
     }
     @RequestMapping("/cambiarEstadoTarea")
-    public String cambiarEstadoTarea(@RequestParam("nombreProyecto")String nombreProyecto, @RequestParam("tituloTarea")String tituloTarea,@RequestParam(value = "estado", required = false)Boolean estado) {
-        Proyecto proyecto = proyectoRepository.findByNombre(nombreProyecto);
-        if(proyecto != null){
-            for ( Tarea tarea : proyecto.getTareas()) {
-                if(tarea.getTitulo().equalsIgnoreCase(tituloTarea)){
-                    tarea.setEstado(estado != null);
-                }
-            }
-            proyectoRepository.save(proyecto);
+    public String cambiarEstadoTarea(@RequestParam("idTarea") Long idTarea, 
+                                     @RequestParam(value = "estado", required = false) Boolean estado) {
+        Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
+
+        if (tarea != null) {
+            boolean estaMarcado = (estado != null);
+            tarea.setEstado(estaMarcado);
+            tareaRepository.save(tarea);
+            String nombreProyecto = tarea.getProyecto().getNombre();
+            return "redirect:/verProyecto?nombre=" + nombreProyecto;
         }
-        return "redirect:/verProyecto?nombre=" + nombreProyecto;
+        return "redirect:/";
     }
     @GetMapping("/borrarProyecto")
     public String borrarProyecto(@RequestParam("id") Long id) {

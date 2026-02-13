@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="container">
-        <h3 th:text="${proyecto != null} ? 'Editar Proyecto' : 'Nuevo Proyecto'"></h3>
+       <h3 th:text="${proyecto.id != null} ? 'Editar Proyecto' : 'Nuevo Proyecto'"></h3>
 
         <div th:if="${error}" class="error">
             <span th:text="${error}"></span>

@@ -9,4 +9,6 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long>{
     Proyecto findByNombre(String nombre);
     List<Proyecto> findByCreador(Usuario creador);
 
+    Proyecto findByNombreAndCreador(String nombre, Usuario creador);
+
 }

@@ -36,5 +36,16 @@
             <a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
         </div>
     </form>
+    <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const btn = this.querySelector('input[type="submit"]');
+        if (btn.disabled) {
+            e.preventDefault();
+            return;
+        }
+        btn.disabled = true;
+        btn.value = 'Registrando...';
+    });
+</script>
 </body>
 </html>

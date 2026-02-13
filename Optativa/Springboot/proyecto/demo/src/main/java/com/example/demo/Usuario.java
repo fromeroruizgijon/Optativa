@@ -10,9 +10,11 @@ public class Usuario {
     //metemos un atributo id para identificar los usuarios
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String nombre;
     private String password;
+    //este campo lo he tenido que poner único para que al darle dos veces antes cargar la siguiente página en registrar no se creen dos registros igules
+    @Column(unique = true)
     private String email;
     private String imagenUrl;
     //usamos @enumerated para que no tome el valor del enum como binario sino como string
@@ -63,11 +65,11 @@ public class Usuario {
 
     //se crean getters y setters de id y de la list de proyectos del usuario
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

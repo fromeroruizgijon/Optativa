@@ -1,89 +1,143 @@
-:root { --primary: #4F46E5; --bg: #f3f4f6; }
-
-body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; }
-
-.nav { background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-.nav a { text-decoration: none; color: #4b5563; }
-
-.container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-
-/* Cabecera del Proyecto */
-.project-header {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+:root {
+    --primary: #2563eb;
+    --dark-txt: #0f172a;
+    --bg-app: #f8fafc;
+    --border-color: #e2e8f0;
 }
 
+body {
+    background-color: var(--bg-app);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding-bottom: 3rem;
+}
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+
+.back-link {
+    display: inline-block; margin-bottom: 1rem; text-decoration: none;
+    color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.8rem;
+}
+.back-link:hover { color: var(--primary); }
+
+/* --- CABECERA (HERO) --- */
+/* En tu HTML usas .project-hero, así que definimos eso aquí */
+.project-hero {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    border-left: 6px solid var(--primary); /* El borde azul lateral */
+    border-radius: 4px;
+}
+
+.project-title-row { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem; }
+.project-hero h1 { margin: 0; font-size: 2.5rem; color: var(--dark-txt); letter-spacing: -1px; }
+.hero-desc { font-size: 1.1rem; color: #475569; max-width: 70%; margin-top: 0.5rem; }
+
+/* BARRA DE PROGRESO */
 .progress-track {
-    background: #e5e7eb;
-    height: 10px;
-    border-radius: 5px;
-    margin: 1rem 0;
+    background: #e2e8f0;
+    height: 16px;
+    border-radius: 8px;
     overflow: hidden;
+    margin-top: 0.5rem;
 }
 .progress-fill {
-    background: #10b981; /* Verde éxito */
-    height: 100%;
-    transition: width 0.5s;
-}
-
-/* Estilos de Tareas */
-.task-card {
-    background: white;
-    border-left: 4px solid var(--primary);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.task-title { font-weight: bold; font-size: 1.1rem; }
-
-.subtask-list {
-    margin-top: 1rem;
-    padding-left: 1rem;
-    border-left: 2px solid #e5e7eb;
-}
-
-.subtask-item {
-    font-size: 0.9rem;
-    color: #4b5563;
-    padding: 0.5rem 0;
-    display: flex;
-    justify-content: space-between;
-}
-
-/* Botones y Formularios */
-.btn {
     background: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.3rem;
+    height: 100%;
+    transition: width 0.6s ease;
+}
+
+/* --- BOTONES --- */
+/* En tu HTML usas .btn-action, no .btn */
+.btn-action {
+    padding: 0.8rem 1.5rem; 
+    background: #0f172a; 
+    color: white; 
+    text-decoration: none;
+    font-weight: 700; 
+    text-transform: uppercase; 
+    font-size: 0.9rem; 
+    border: none; 
     cursor: pointer;
-    font-size: 0.9rem;
+    transition: background 0.2s;
+    display: inline-block;
 }
-.btn-sm { padding: 0.2rem 0.5rem; font-size: 0.8rem; background: #e5e7eb; color: black; }
+.btn-action:hover { background: var(--primary); }
 
-.hidden-form {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f9fafb;
-    border-radius: 0.5rem;
-    transition: opacity 0.3s ease;
+.btn-secondary { background: #e2e8f0; color: var(--dark-txt); }
+.btn-secondary:hover { background: #cbd5e1; }
+
+.btn-text-delete { color: #dc2626; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
+.btn-text-delete:hover { text-decoration: underline; }
+
+.btn-text-toggle {
+    background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; padding: 1rem 1.5rem; text-transform: uppercase; font-size: 0.85rem;
+}
+.btn-text-toggle:hover { text-decoration: underline; }
+
+/* --- SECCIÓN TAREAS --- */
+.tasks-section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 1rem; border-bottom: 2px solid var(--border-color); margin-bottom: 2rem;
+}
+.tasks-section-header h2 { margin: 0; font-size: 1.8rem; color: var(--dark-txt); }
+
+/* --- BLOQUE DE TAREA --- */
+/* En tu HTML usas .task-block, no .task-card */
+.task-block {
+    background: #fff; 
+    border: 1px solid var(--border-color); 
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+/* Estilo para tareas completadas */
+.task-completed .task-title { text-decoration: line-through; color: #94a3b8; }
+.task-completed { opacity: 0.8; }
+
+.task-main-row {
+    padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;
+}
+.task-info { display: flex; align-items: center; gap: 1.5rem; }
+
+.task-title { font-size: 1.2rem; font-weight: 700; color: var(--dark-txt); }
+.priority-badge {
+    background: #f1f5f9; padding: 0.4rem 0.8rem; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
 }
 
-input[type="text"], input[type="number"] {
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.3rem;
-    margin-right: 0.5rem;
+/* Checkbox grande */
+.auto-submit-check {
+    width: 24px; height: 24px; cursor: pointer; accent-color: var(--primary);
 }
+
+/* --- SUBTAREAS --- */
+.subtasks-container {
+    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+.subtask-row {
+    display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border-color); font-size: 0.95rem;
+}
+.subtask-row:last-child { border-bottom: none; }
+
+/* --- FORMULARIOS OCULTOS --- */
+.hidden-form-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease;
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Clase que añade JS para mostrar */
+.form-visible {
+    max-height: 200px; /* Altura suficiente */
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-inline-flex { display: flex; gap: 1rem; align-items: center; }
+.form-input { padding: 0.8rem; border: 2px solid var(--border-color); flex-grow: 1; }
+.form-input-sm { width: 80px; }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${proyecto.nombre}"></title>
-    <link rel="stylesheet" th:href="@{/proyecto.css}">
+    <link rel="stylesheet" href="/css/proyecto.css">
 </head>
 <body>
     <div class="container">
@@ -19,13 +19,11 @@
                     Descargar PDF
                 </a>
             </div>
-            
             <div style="margin-top: 2rem;">
                 <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.85rem; color: #475569;">
                     <span>Estado del Proyecto</span>
                     <span th:text="${#numbers.formatDecimal(proyecto.porcentajeCompletado, 0, 0)} + '% Completado'"></span>
                 </div>
-                
                 <div class="progress-track">
                     <div class="progress-fill" 
                         th:style="'width:' + ${proyecto.porcentajeCompletado} + '%'">
@@ -45,24 +43,24 @@
             
             <div id="mainTaskForm" class="hidden-form-container">
                 <form action="/insertarTareaPrincipal" method="get" class="form-inline-flex">
-                    <input type="hidden" name="nombreProyecto" th:value="${proyecto.nombre}">
+                    <input type="hidden" name="idProyecto" th:value="${proyecto.id}">
                     <input type="text" name="titulo" class="form-input" placeholder="Título" required>
                     <input type="text" name="descripcion" class="form-input" placeholder="Descripción" required>
                     <input type="number" name="prioridad" class="form-input form-input-sm" placeholder="Prio" value="1" min="1" required>
                     <input type="submit" value="Añadir" class="btn-action">
                 </form>
             </div>
-
-            <div th:each="tarea : ${proyecto.tareas}" class="task-block" th:classappend="${tarea.estado} ? 'task-completed' : ''">
+            <div th:each="tarea : ${proyecto.soloTareasPrincipales}" class="task-block" th:classappend="${tarea.estado} ? 'task-completed' : ''">
                 <div class="task-main-row">
                     <div class="task-info">
                         <form th:action="@{/cambiarEstadoTarea}" method="get">
-                            <input type="hidden" name="nombreProyecto" th:value="${proyecto.nombre}">
-                            <input type="hidden" name="tituloTarea" th:value="${tarea.titulo}">
+                            <input type="hidden" name="idTarea" th:value="${tarea.id}">
+                            
                             <input type="checkbox" name="estado" value="true" 
-                                   th:checked="${tarea.estado}" 
-                                   class="auto-submit-check">
+                                th:checked="${tarea.estado}" 
+                                class="auto-submit-check">
                         </form>
+                        
                         <div>
                             <div class="task-title" th:text="${tarea.titulo}"></div>
                             <small th:text="${tarea.description}" style="color: #64748b;"></small>
@@ -90,9 +88,10 @@
                     <button class="btn-text-toggle btn-toggle-form" th:data-target="${'subForm-' + tarea.id}">+ Añadir Subtarea</button>
                     
                     <div th:id="${'subForm-' + tarea.id}" class="hidden-form-container" style="background: #fff;">
-                         <form action="/insertarTareaSecundaria" method="get" class="form-inline-flex">
-                            <input type="hidden" name="nombreProyecto" th:value="${proyecto.nombre}">
-                            <input type="hidden" name="tituloPrincipal" th:value="${tarea.titulo}">
+     
+                        <form action="/insertarTareaSecundaria" method="get" class="form-inline-flex">
+                            <input type="hidden" name="idProyecto" th:value="${proyecto.id}">
+                            <input type="hidden" name="idTareaPadre" th:value="${tarea.id}">
                             <input type="text" name="tituloSecundaria" class="form-input" placeholder="Título" required>
                             <input type="text" name="descripcion" class="form-input" placeholder="Descripción" required>
                             <input type="number" name="prioridad" class="form-input form-input-sm" value="1" required>

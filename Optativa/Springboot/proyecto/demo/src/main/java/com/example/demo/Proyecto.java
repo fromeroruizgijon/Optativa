@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class Proyecto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String nombre;
 
@@ -97,11 +97,25 @@ public class Proyecto {
 
         return tareas;
     }
-    public long getId() {
+
+    public List<TareaPrincipal> getSoloTareasPrincipales() {
+    List<TareaPrincipal> listaFiltrada = new ArrayList<>();
+    
+    if (this.tareas != null) {
+        for (Tarea t : this.tareas) {
+            if (t instanceof TareaPrincipal) {
+                listaFiltrada.add((TareaPrincipal) t);
+            }
+        }
+    }
+    return listaFiltrada;
+}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
