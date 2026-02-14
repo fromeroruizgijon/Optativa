@@ -163,18 +163,29 @@ public class ProyectoControler {
             return "redirect:/";
         }
     }
-    @RequestMapping("/cambiarEstadoTarea")
+    @GetMapping("/cambiarEstadoTarea")
     public String cambiarEstadoTarea(@RequestParam("idTarea") Long idTarea, 
                                      @RequestParam(value = "estado", required = false) Boolean estado) {
+        
         Tarea tarea = tareaRepository.findById(idTarea).orElse(null);
-
+        
         if (tarea != null) {
-            boolean estaMarcado = (estado != null);
-            tarea.setEstado(estaMarcado);
+            boolean nuevoEstado = (estado != null);
+            tarea.setEstado(nuevoEstado);
+            if (tarea instanceof TareaPrincipal) {
+                TareaPrincipal principal = (TareaPrincipal) tarea;
+                if (principal.getTareasSecundarias() != null) {
+                    for (TareaSecundaria sub : principal.getTareasSecundarias()) {
+                        sub.setEstado(nuevoEstado);
+                    }
+                }
+            }
             tareaRepository.save(tarea);
+            
             String nombreProyecto = tarea.getProyecto().getNombre();
             return "redirect:/verProyecto?nombre=" + nombreProyecto;
         }
+        
         return "redirect:/";
     }
     @GetMapping("/borrarProyecto")

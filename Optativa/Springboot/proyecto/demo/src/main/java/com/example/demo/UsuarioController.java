@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UsuarioController {
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @RequestMapping("/login")
@@ -55,6 +58,17 @@ public class UsuarioController {
         }
 
         usuarioRepository.save(nuevoUsuario);
+
+        // 2. ENVIAR EL CORREO (Añade esto justo aquí)
+        // Usamos el email que el usuario escribió en el formulario
+        String asunto = "Bienvenido a FiumPlan";
+        String mensaje = "Hola " + nuevoUsuario.getNombre() + ",\n\n" +
+                         "Tu registro se ha completado con éxito.\n" +
+                         "Ya puedes iniciar sesión y crear proyectos.\n\n" +
+                         "Un saludo.";
+                         
+        emailService.enviarCorreo(nuevoUsuario.getEmail(), asunto, mensaje);
+
         return "redirect:/login";
     }
     

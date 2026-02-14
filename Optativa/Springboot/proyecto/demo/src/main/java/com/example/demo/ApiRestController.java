@@ -11,13 +11,13 @@ public class ApiRestController {
     @Autowired
     private ProyectoRepository proyectoRepository;
 
-    // --- GET: Listar todos (Ya lo tenías) ---
+    // GET: Todos
     @GetMapping("/proyectos")
     public List<Proyecto> listarProyectos() {
         return proyectoRepository.findAll();
     }
     
-    // --- GET: Buscar por patrón (Ya lo tenías) ---
+    // GET: por patrón
     @GetMapping("/proyectos/buscar")
     public List<Proyecto> buscarProyectos(@RequestParam String texto) {
         List<Proyecto> todos = proyectoRepository.findAll();
@@ -26,36 +26,28 @@ public class ApiRestController {
                 .toList();
     }
 
-    // --- POST: Crear un nuevo proyecto ---
-    // @RequestBody convierte el JSON que envías desde Swagger a un objeto Java
+    // POST: Crear un nuevo proyecto
     @PostMapping("/proyectos")
     public Proyecto crearProyecto(@RequestBody Proyecto proyecto) {
-        // Guardamos el proyecto tal cual viene
         return proyectoRepository.save(proyecto);
     }
 
-    // --- PUT: Modificar un proyecto existente ---
-    // @PathVariable pilla el número de la URL (/api/proyectos/5)
+    //PUT: Modificar
     @PutMapping("/proyectos/{id}")
     public Proyecto actualizarProyecto(@PathVariable Long id, @RequestBody Proyecto proyectoDatosNuevos) {
-        // 1. Buscamos si existe el proyecto con ese ID
         Proyecto proyectoExistente = proyectoRepository.findById(id).orElse(null);
         
         if (proyectoExistente != null) {
-            // 2. Actualizamos solo los campos que queremos cambiar
             proyectoExistente.setNombre(proyectoDatosNuevos.getNombre());
             proyectoExistente.setDescripcion(proyectoDatosNuevos.getDescripcion());
-            
-            // 3. Guardamos los cambios
             return proyectoRepository.save(proyectoExistente);
         }
-        return null; // O podrías lanzar una excepción si no existe
+        return null;
     }
 
-    // --- DELETE: Borrar un proyecto ---
+    //DELETE: Borrar un proyecto
     @DeleteMapping("/proyectos/{id}")
     public String borrarProyecto(@PathVariable Long id) {
-        // Verificamos si existe antes de borrar para evitar errores
         if (proyectoRepository.existsById(id)) {
             proyectoRepository.deleteById(id);
             return "Proyecto eliminado correctamente";
