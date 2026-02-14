@@ -42,7 +42,7 @@
             </div>
             
             <div id="mainTaskForm" class="hidden-form-container">
-                <form action="/insertarTareaPrincipal" method="get" class="form-inline-flex">
+                <form th:action="@{/insertarTareaPrincipal}" method="get" class="form-inline-flex">
                     <input type="hidden" name="idProyecto" th:value="${proyecto.id}">
                     <input type="text" name="titulo" class="form-input" placeholder="Título" required>
                     <input type="text" name="descripcion" class="form-input" placeholder="Descripción" required>
@@ -89,7 +89,7 @@
                     
                     <div th:id="${'subForm-' + tarea.id}" class="hidden-form-container" style="background: #fff;">
      
-                        <form action="/insertarTareaSecundaria" method="get" class="form-inline-flex">
+                        <form th:action="@{/insertarTareaSecundaria}" method="get" class="form-inline-flex">
                             <input type="hidden" name="idProyecto" th:value="${proyecto.id}">
                             <input type="hidden" name="idTareaPadre" th:value="${tarea.id}">
                             <input type="text" name="tituloSecundaria" class="form-input" placeholder="Título" required>

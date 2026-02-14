@@ -11,10 +11,10 @@
         <nav class="user-nav">
             <ul>
                 <li style="display: flex; align-items: center; gap: 10px;">
-                    <img th:src="${session.usuario.imagenUrl}" style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #e2e8f0;">
-                    <span th:text="${session.usuario.nombre}"></span>
+                    <img th:src="${usuario.imagenUrl}" style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #e2e8f0;">
+                    <span th:text="${usuario.nombre}"></span>
                 </li>
-                <li><a href="/cerrarSesion">Cerrar Sesión</a></li>
+                <li><a href="/logout">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>

@@ -12,19 +12,16 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void enviarCorreo(String destinatario, String asunto, String cuerpo) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("informaticafrv1@gmail.com"); 
-            
-            message.setTo(destinatario);
-            message.setSubject(asunto);
-            message.setText(cuerpo);
+        SimpleMailMessage message = new SimpleMailMessage();
+        
+        // ESTE EMAIL DEBE SER EL QUE VERIFICASTE EN EL PASO 2
+        // Si pones otro, SendGrid bloqueará el correo.
+        message.setFrom("informaticafrv1@gmail.com"); 
+        
+        message.setTo(destinatario);
+        message.setSubject(asunto);
+        message.setText(cuerpo);
 
-            mailSender.send(message);
-            System.out.println("Correo enviado a: " + destinatario);
-            
-        } catch (Exception e) {
-            System.err.println("Error enviando correo: " + e.getMessage());
-        }
+        mailSender.send(message);
     }
 }

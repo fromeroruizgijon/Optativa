@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
-
-
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 public class UsuarioController {
@@ -21,8 +19,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @RequestMapping("/login")
-    public String mostrarLogin() {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/login")
+    public String login() {
         return "login";
     }
     @RequestMapping("/registro")
@@ -31,7 +32,7 @@ public class UsuarioController {
     }
     
 
-    @RequestMapping("/procesarLogin")
+    /*@RequestMapping("/procesarLogin")
     public String procesarLogin(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "password") String password, HttpSession session) {
         //he sustituido todo el método que tenía hecho por que con la base de datos se simplifica mucho
        Usuario usuarioLogeado = usuarioRepository.findByNombreAndPassword(nombre, password);
@@ -41,12 +42,15 @@ public class UsuarioController {
        }else{
         return "redirect:/registro?error=true";
        }
-    }
+    }*/
     @Autowired
     private CloudinaryService cloudinaryService;
     @PostMapping("/insertarUsuario")
     public String procesarRegistro(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam("archivo") MultipartFile archivo){
         Usuario nuevoUsuario = new Usuario (nombre, password, email, Roles.normal);
+
+        String passEncriptada = passwordEncoder.encode(nuevoUsuario.getPassword());
+        nuevoUsuario.setPassword(passEncriptada);
 
         if (!archivo.isEmpty()) {
             // Si el usuario subió algo, lo mandamos a Cloudinary
@@ -91,10 +95,10 @@ public class UsuarioController {
         }
         return listaUsuarios;
     }*/
-    @RequestMapping("/cerrarSesion")
+    /*@RequestMapping("/cerrarSesion")
     public String cerrarSesion(HttpSession session) {
        session.invalidate();
         return "login";
-    }
+    }*/
     
 }

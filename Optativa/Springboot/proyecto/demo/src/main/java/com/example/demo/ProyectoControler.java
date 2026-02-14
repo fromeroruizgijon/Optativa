@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.Authentication;
 
 
 @Controller
@@ -25,15 +24,28 @@ public class ProyectoControler {
 
     @Autowired
     private ProyectoRepository proyectoRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     
     @GetMapping("/")
-    public String mostrarInicio(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario == null) return "redirect:/login";
+    public String mostrarInicio(Model model, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        // 1. Obtenemos el email del usuario logueado desde Spring Security
+        String email = authentication.getName();
 
+        // 2. Buscamos el objeto Usuario completo en la base de datos
+        Usuario usuario = usuarioRepository.findByEmail(email);
+
+        // 3. Buscamos sus proyectos
         List<Proyecto> proyectos = proyectoRepository.findByCreador(usuario);
 
         model.addAttribute("listaProyectos", proyectos);
+        // También pasamos el usuario a la vista por si quieres mostrar su nombre o foto
+        model.addAttribute("usuario", usuario); 
+        
         return "index";
     }
     
@@ -41,9 +53,10 @@ public class ProyectoControler {
     public String guardarProyecto(@RequestParam(name="id", required=false) Long id,
                                   @RequestParam("nombre") String nombre, 
                                   @RequestParam("descripcion") String descripcion, 
-                                  HttpSession session,
+                                  Authentication authentication,
                                   Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        String email = authentication.getName();
+        Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario == null) return "redirect:/login";
         Proyecto proyectoExistente = proyectoRepository.findByNombreAndCreador(nombre, usuario);
         if (proyectoExistente != null) {
@@ -86,8 +99,9 @@ public class ProyectoControler {
     }
     
     @GetMapping("/verProyecto")
-    public String verProyecto(@RequestParam String nombre, Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+    public String verProyecto(@RequestParam String nombre, Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioRepository.findByEmail(email);
         Proyecto proyecto = proyectoRepository.findByNombreAndCreador(nombre, usuario);
         if (proyecto != null) {
             model.addAttribute("proyecto", proyecto);
@@ -134,6 +148,12 @@ public class ProyectoControler {
             subtarea.setCategoria(categoria);
             subtarea.setEstado(false);
             subtarea.setFechaCreacion(java.time.LocalDate.now());
+
+            if (tareaPadre.isEstado()) {
+                tareaPadre.setEstado(false); 
+                // Guardamos el padre con el nuevo estado
+                tareaRepository.save(tareaPadre);
+            }
             
             subtarea.setProyecto(proyecto);
             subtarea.setTareaPadre(tareaPadre); 

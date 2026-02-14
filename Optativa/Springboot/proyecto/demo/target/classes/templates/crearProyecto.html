@@ -13,7 +13,7 @@
             <span th:text="${error}"></span>
         </div>
 
-        <form action="/guardarProyecto" method="post">
+        <form th:action="@{/guardarProyecto}" method="post">
             <input type="hidden" name="id" th:value="${proyecto != null ? proyecto.id : ''}">
             
             <label for="nombre">Nombre del Proyecto</label>
