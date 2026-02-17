@@ -29,3 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+function confirmarBorrado(url) {
+    const modal = document.getElementById('modalConfirmar');
+    const btnConfirmar = document.getElementById('btnConfirmarBorrado');
+    
+    // Asignamos la URL de borrado al botón "Sí" del modal
+    btnConfirmar.href = url;
+    
+    // Mostramos el modal
+    modal.style.display = 'flex';
+}
+
+function cerrarModal() {
+    document.getElementById('modalConfirmar').style.display = 'none';
+}

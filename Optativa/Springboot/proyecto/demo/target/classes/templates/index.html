@@ -50,12 +50,23 @@
 
                 <div class="panel-footer">
                     <a th:href="@{/editarProyecto(id=${proyecto.id})}" class="action-link link-edit">Editar</a>
-                    <a th:href="@{/borrarProyecto(id=${proyecto.id})}" 
-                       class="action-link link-delete"
-                       onclick="return confirm('¿Atención: Se borrará el proyecto y sus tareas. ¿Continuar?')">Borrar</a>
+                   <button class="action-link link-delete" 
+                            th:onclick="'confirmarBorrado(\'/borrarProyecto?id=' + ${proyecto.id} + '\')'">
+                        Borrar
+                    </button>
                 </div>
             </div>
         </div>
     </main>
+    <div id="modalConfirmar" class="modal-overlay">
+    <div class="modal-box">
+        <h3>¿Estás seguro?</h3>
+        <p>Esta acción eliminará el elemento permanentemente.</p>
+        <div class="modal-actions">
+            <button onclick="cerrarModal()" class="btn-cancel">Cancelar</button>
+            <a id="btnConfirmarBorrado" href="#" class="btn-delete-confirm">Sí, borrar</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
