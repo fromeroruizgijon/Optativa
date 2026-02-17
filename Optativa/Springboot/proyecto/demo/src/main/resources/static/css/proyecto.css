@@ -173,8 +173,6 @@ body {
     padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
 }
-
-<<<<<<< HEAD
 .form-inline-flex { display: flex; gap: 1rem; align-items: center; }
 .form-input { padding: 0.8rem; border: 2px solid var(--border-color); flex-grow: 1; }
 .form-input-sm { width: 80px; }

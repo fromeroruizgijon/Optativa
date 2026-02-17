@@ -51,7 +51,8 @@
                 <div class="panel-footer">
                     <a th:href="@{/editarProyecto(id=${proyecto.id})}" class="action-link link-edit">Editar</a>
                    <button class="action-link link-delete" 
-                            th:onclick="'confirmarBorrado(\'/borrarProyecto?id=' + ${proyecto.id} + '\')'">
+                            th:data-url="@{/borrarProyecto(id=${proyecto.id})}"
+                            onclick="confirmarBorrado(this.getAttribute('data-url'))">
                         Borrar
                     </button>
                 </div>
@@ -68,5 +69,6 @@
         </div>
     </div>
 </div>
+<script src="/js/scripts.js"></script>
 </body>
 </html>

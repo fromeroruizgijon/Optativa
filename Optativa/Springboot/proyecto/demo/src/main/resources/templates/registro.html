@@ -12,7 +12,10 @@
         
         <div>
             <label for="nombre">Usuario</label>
-            <input type="text" name="nombre" required placeholder="Tu nombre">
+            <input type="text" name="nombre" required 
+                   placeholder="Tu nombre (mín. 3 letras)" 
+                   minlength="3"
+                   title="El nombre debe tener al menos 3 letras.">
         </div>
         
         <div>
@@ -22,7 +25,10 @@
         
         <div>
             <label for="password">Contraseña</label>
-            <input type="password" name="password" required placeholder="••••••••">
+            <input type="password" name="password" id="inputPass" required placeholder="••••••••">
+            <small style="color: #64748b; font-size: 0.8rem; margin-top: 4px; display:block;">
+                Mínimo 8 caracteres, 1 número y 1 mayúscula.
+            </small>
         </div>
         
         <div>
@@ -36,16 +42,34 @@
             <a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
         </div>
     </form>
+
     <script>
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const btn = this.querySelector('input[type="submit"]');
-        if (btn.disabled) {
-            e.preventDefault();
-            return;
-        }
-        btn.disabled = true;
-        btn.value = 'Registrando...';
-    });
-</script>
+        const passInput = document.getElementById('inputPass');
+
+        passInput.addEventListener('input', function() {
+            const valor = this.value;
+           
+            const regexSegura = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
+
+            if (!regexSegura.test(valor)) {
+                this.setCustomValidity("La contraseña es débil: Necesita 8 caracteres, 1 número y 1 mayúscula.");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            
+            const btn = this.querySelector('input[type="submit"]');
+            
+            if (btn.disabled) {
+                e.preventDefault();
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.value = 'Registrando...';
+        });
+    </script>
 </body>
 </html>

@@ -7,8 +7,7 @@
 </head>
 <body>
     <div class="container">
-        <a href="/" class="back-link">← Volver al Inicio</a>
-
+         <a href="/" class="back-link">← Volver al Inicio</a>
         <header class="project-hero">
             <div class="project-title-row">
                 <div>
@@ -70,7 +69,8 @@
                     <div style="display: flex; align-items: center; gap: 1.5rem;">
                         <span class="priority-badge">Prioridad <span th:text="${tarea.prioridad}"></span></span>
                        <button class="action-link link-delete" 
-                                th:onclick="'confirmarBorrado(\'/borrarProyecto?id=' + ${proyecto.id} + '\')'">
+                                th:data-url="@{/borrarTarea(id=${tarea.id}, nombreProyecto=${proyecto.nombre})}"
+                                onclick="confirmarBorrado(this.getAttribute('data-url'))">
                             Borrar
                         </button>
                     </div>
@@ -84,7 +84,8 @@
                              <small style="color: #94a3b8;" th:text="'(' + ${sub.description} + ')'"></small>
                         </div>
                         <button class="action-link link-delete" 
-                                th:onclick="'confirmarBorrado(\'/borrarProyecto?id=' + ${proyecto.id} + '\')'">
+                                th:data-url="@{/borrarTarea(id=${sub.id}, nombreProyecto=${proyecto.nombre})}"
+                                onclick="confirmarBorrado(this.getAttribute('data-url'))">
                             Borrar
                         </button>
                     </div>
