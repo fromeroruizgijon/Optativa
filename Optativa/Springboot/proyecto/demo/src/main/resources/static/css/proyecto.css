@@ -79,10 +79,17 @@ body {
 
 /* --- SECCIÓN TAREAS --- */
 .tasks-section-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-bottom: 1rem; border-bottom: 2px solid var(--border-color); margin-bottom: 2rem;
+    display: flex; justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem; 
+    border-bottom: 2px solid var(--border-color); 
+    margin-bottom: 2rem;
 }
-.tasks-section-header h2 { margin: 0; font-size: 1.8rem; color: var(--dark-txt); }
+.tasks-section-header h2 { 
+    margin: 0;
+    font-size: 1.8rem; 
+    color: var(--dark-txt); 
+}
 
 /* --- BLOQUE DE TAREA --- */
 /* En tu HTML usas .task-block, no .task-card */
@@ -93,22 +100,45 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 /* Estilo para tareas completadas */
-.task-completed .task-title { text-decoration: line-through; color: #94a3b8; }
-.task-completed { opacity: 0.8; }
+.task-completed .task-title {
+    text-decoration: line-through; 
+    color: #94a3b8; 
+}
+.task-completed { 
+    opacity: 0.8; 
+}
 
 .task-main-row {
-    padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
 }
-.task-info { display: flex; align-items: center; gap: 1.5rem; }
+.task-info { 
+    display: 
+    flex; align-items: center; 
+    gap: 1.5rem; 
+}
 
-.task-title { font-size: 1.2rem; font-weight: 700; color: var(--dark-txt); }
+.task-title { 
+    font-size: 1.2rem; 
+    font-weight: 700; 
+    color: var(--dark-txt); 
+}
 .priority-badge {
-    background: #f1f5f9; padding: 0.4rem 0.8rem; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+    background: #f1f5f9; 
+    padding: 0.4rem 0.8rem; 
+    font-weight: 700; 
+    font-size: 0.8rem; 
+    text-transform: uppercase;
 }
 
 /* Checkbox grande */
 .auto-submit-check {
-    width: 24px; height: 24px; cursor: pointer; accent-color: var(--primary);
+    width: 24px; 
+    height: 24px; 
+    cursor: pointer; 
+    accent-color: var(--primary);
 }
 
 /* --- SUBTAREAS --- */
@@ -118,9 +148,15 @@ body {
     padding: 1rem 1.5rem;
 }
 .subtask-row {
-    display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border-color); font-size: 0.95rem;
+    display: flex; 
+    justify-content: space-between; 
+    padding: 0.8rem 0; 
+    border-bottom: 1px solid var(--border-color); 
+    font-size: 0.95rem;
 }
-.subtask-row:last-child { border-bottom: none; }
+.subtask-row:last-child { 
+    border-bottom: none; 
+}
 
 /* --- FORMULARIOS OCULTOS --- */
 .hidden-form-container {
@@ -138,6 +174,7 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
+<<<<<<< HEAD
 .form-inline-flex { display: flex; gap: 1rem; align-items: center; }
 .form-input { padding: 0.8rem; border: 2px solid var(--border-color); flex-grow: 1; }
 .form-input-sm { width: 80px; }
