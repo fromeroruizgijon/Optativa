@@ -10,6 +10,9 @@
         <div class="brand">FiumPlan Panel</div>
         <nav class="user-nav">
             <ul>
+                <li><div th:if="${usuario.rol.name() == 'admin'}">
+                        <a href="/admin/dashboard" class="btn-action">PANEL ADMIN</a>
+                    </div></li>
                 <li style="display: flex; align-items: center; gap: 10px;">
                     <img th:src="${usuario.imagenUrl}" style="width: 32px; height: 32px; object-fit: cover; border: 2px solid #e2e8f0;">
                     <span th:text="${usuario.nombre}"></span>

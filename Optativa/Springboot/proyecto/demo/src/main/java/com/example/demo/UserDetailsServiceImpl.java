@@ -23,11 +23,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
 
-        // Construimos el usuario para Spring Security
         return User.builder()
-                .username(usuario.getEmail())
-                .password(usuario.getPassword())
-                .roles("USER") // Ponemos un rol fijo por ahora para simplificar
-                .build();
+            .username(usuario.getEmail())
+            .password(usuario.getPassword())
+            .authorities(usuario.getRol().name()) 
+            .build();
     }
 }

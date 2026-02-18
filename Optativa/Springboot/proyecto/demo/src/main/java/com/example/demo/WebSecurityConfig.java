@@ -17,21 +17,20 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                // Rutas públicas: Login, Registro, CSS, JS, etc.
                 .requestMatchers("/", "/login", "/registro", "/insertarUsuario", "/css/**", "/js/**", "/images/**").permitAll()
-                // Cualquier otra cosa requiere login
+                .requestMatchers("/admin/**").hasAuthority("admin")
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
-                .loginPage("/login") // Tu HTML de login
-                .usernameParameter("email") // Importante: usas email como usuario
-                .defaultSuccessUrl("/", true) // A dónde va si entra bien
+                .loginPage("/login")
+                .usernameParameter("email")
+                .defaultSuccessUrl("/", true)
                 .permitAll()
             )
             .logout((logout) -> logout
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) 
             
-            .logoutSuccessUrl("/login?logout") // A donde vas al salir
+            .logoutSuccessUrl("/login?logout")
             .permitAll()
         );
 
