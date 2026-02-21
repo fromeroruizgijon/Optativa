@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +23,7 @@ public class Proyecto {
     @ManyToOne
     //esta es la clave foránea
     @JoinColumn(name = "usuario_id")
+    @JsonIgnore
     private Usuario creador;
 
     //relación de tareas
