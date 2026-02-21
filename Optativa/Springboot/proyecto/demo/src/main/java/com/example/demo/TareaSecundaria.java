@@ -2,6 +2,8 @@ package com.example.demo;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class TareaSecundaria extends Tarea {
 
     @ManyToOne
     @JoinColumn(name = "tarea_padre_id")
+    @JsonIgnore
     private TareaPrincipal tareaPadre;
 
     public TareaSecundaria(){}
