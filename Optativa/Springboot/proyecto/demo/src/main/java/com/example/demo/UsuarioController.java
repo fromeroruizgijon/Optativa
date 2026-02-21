@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,9 @@ public class UsuarioController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping("/login")
     public String login() {
@@ -43,10 +47,16 @@ public class UsuarioController {
         return "redirect:/registro?error=true";
        }
     }*/
-    @Autowired
-    private CloudinaryService cloudinaryService;
     @PostMapping("/insertarUsuario")
-    public String procesarRegistro(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam("archivo") MultipartFile archivo){
+    public String procesarRegistro(@RequestParam(name = "nombre") String nombre, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam("archivo") MultipartFile archivo, RedirectAttributes redirectAttributes){
+        
+        Usuario usuarioExistente = usuarioRepository.findByEmail(email);
+        if (usuarioExistente != null) {
+            // Si ya hay un usuario con ese correo, le devolvemos al formulario con un error
+            redirectAttributes.addFlashAttribute("error", "Ese correo electrónico ya está en uso.");
+            return "redirect:/registro"; 
+        }
+
         Usuario nuevoUsuario = new Usuario (nombre, password, email, Roles.normal);
 
         String passEncriptada = passwordEncoder.encode(nuevoUsuario.getPassword());
