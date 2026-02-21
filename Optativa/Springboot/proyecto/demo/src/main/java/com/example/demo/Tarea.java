@@ -2,6 +2,8 @@ package com.example.demo;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +23,7 @@ public class Tarea implements Comparable<Tarea> {
 
     @ManyToOne
     @JoinColumn(name = "proyecto_id")
+    @JsonIgnore
     private Proyecto proyecto;
     
     public Tarea(){}
