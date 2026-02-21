@@ -18,6 +18,7 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/login", "/registro", "/insertarUsuario", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("admin")
                 .anyRequest().authenticated()
             )
