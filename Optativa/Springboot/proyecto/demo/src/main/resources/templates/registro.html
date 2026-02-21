@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="/css/registro.css">
 </head>
 <body>
-    <div th:if="${error}" style="background-color: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; text-align: center; border: 1px solid #fca5a5; font-weight: bold;">
-        <p th:text="${error}" style="margin: 0;"></p>
-    </div>
     <form th:action="@{/insertarUsuario}" method="post" enctype="multipart/form-data">
         <h1>Crear Cuenta</h1>
         <p class="subtitle">Únete para gestionar tus proyectos</p>
@@ -24,6 +21,9 @@
         <div>
             <label for="email">Email</label>
             <input type="email" name="email" required placeholder="correo@ejemplo.com">
+        </div>
+        <div th:if="${error}" style="background-color: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; text-align: center; border: 1px solid #fca5a5; font-weight: bold;">
+            <p th:text="${error}" style="margin: 0;"></p>
         </div>
         
         <div>
