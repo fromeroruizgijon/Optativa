@@ -2,34 +2,37 @@ package com.example.demo;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class CloudinaryService {
 
-    private Cloudinary cloudinary;
+    private final Cloudinary cloudinary;
 
-    public CloudinaryService() {
-        Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"));
-        valuesMap.put("api_key", System.getenv("CLOUDINARY_API_KEY"));
-        valuesMap.put("api_secret", System.getenv("CLOUDINARY_API_SECRET"));
-        cloudinary = new Cloudinary(valuesMap);
+    // Con @Value, Spring Boot va al application.properties y busca estas palabras exactas
+    public CloudinaryService(
+            @Value("${cloudinary.cloud_name}") String cloudName,
+            @Value("${cloudinary.api_key}") String apiKey,
+            @Value("${cloudinary.api_secret}") String apiSecret) {
+        
+        // Aquí construimos el objeto pasándole las credenciales reales
+        this.cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret
+        ));
     }
 
-    public String subirImagen(MultipartFile file) {
+    public String subirImagen(MultipartFile archivo) {
         try {
-            // Sube la imagen y devuelve un Map con los resultados
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            // Extraemos la URL directa de la imagen
-            return (String) uploadResult.get("url");
+            Map uploadResult = cloudinary.uploader().upload(archivo.getBytes(), ObjectUtils.emptyMap());
+            return uploadResult.get("url").toString();
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error al subir la imagen a Cloudinary", e);
         }
     }
 }
