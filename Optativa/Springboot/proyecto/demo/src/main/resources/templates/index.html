@@ -27,7 +27,24 @@
             <h2>Proyectos Activos</h2>
             <a href="crearProyecto" class="btn-create-main">Crear Nuevo Proyecto</a>
         </div>
-        
+        <div style="margin-bottom: 2rem; display: flex; gap: 10px; max-width: 600px;">
+            <form action="/" method="get" style="display: flex; gap: 10px; flex-grow: 1;">
+                
+                <input type="text" name="buscar" th:value="${textoBusqueda}" 
+                    placeholder="Buscar proyecto por nombre" 
+                    style="padding: 0.8rem; border: 2px solid #e2e8f0; border-radius: 4px; flex-grow: 1; font-size: 1rem;">
+                
+                <button type="submit" class="btn-action" style="background: #0f172a; color: white; border-radius: 4px; cursor: pointer; padding: 0 1.5rem;">
+                     Buscar
+                </button>
+            </form>
+
+            <a th:if="${textoBusqueda != null}" href="/" class="btn-action" 
+            style="background: #dc2626; color: white; text-decoration: none; border-radius: 4px; display: flex; align-items: center; padding: 0 1.5rem;">
+                ✖ Limpiar
+            </a>
+        </div>
+                
         <div class="projects-grid">
             <div th:each="proyecto : ${listaProyectos}" class="project-panel">
                 

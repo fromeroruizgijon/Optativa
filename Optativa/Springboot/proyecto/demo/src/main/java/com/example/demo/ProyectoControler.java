@@ -29,7 +29,7 @@ public class ProyectoControler {
     private UsuarioRepository usuarioRepository;
     
     @GetMapping("/")
-    public String mostrarInicio(Model model, Authentication authentication) {
+    public String mostrarInicio(Model model, Authentication authentication, @RequestParam(name = "buscar", required = false) String buscar) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
@@ -40,7 +40,18 @@ public class ProyectoControler {
         Usuario usuario = usuarioRepository.findByEmail(email);
 
         // 3. Buscamos sus proyectos
-        List<Proyecto> proyectos = proyectoRepository.findByCreador(usuario);
+        List<Proyecto> proyectos;
+
+    // 👇 LÓGICA DEL BUSCADOR 👇
+    if (buscar != null && !buscar.trim().isEmpty()) {
+        // Si el usuario ha escrito algo, buscamos por ese patrón
+        proyectos = proyectoRepository.findByNombreContainingIgnoreCaseAndCreador(buscar, usuario);
+        // Guardamos la palabra buscada para dejarla escrita en la barra de búsqueda visualmente
+        model.addAttribute("textoBusqueda", buscar); 
+    } else {
+        // Si no ha buscado nada, mostramos todos sus proyectos normalmente
+        proyectos = proyectoRepository.findByCreador(usuario);
+    }
 
         model.addAttribute("listaProyectos", proyectos);
         // También pasamos el usuario a la vista por si quieres mostrar su nombre o foto
